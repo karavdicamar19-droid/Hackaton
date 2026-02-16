@@ -13,8 +13,8 @@
 
 ## 🛠 Instalacija
 ```bash
-git clone [https://github.com/TVOJ-USER/GHOST-AI.git](https://github.com/TVOJ-USER/GHOST-AI.git)
-cd GHOST-AI
+[git clone [https://github.com/TVOJ-USER/GHOST-AI.git]](https://github.com/karavdicamar19-droid/Hackaton)
+cd Hackaton
 pip install -r requirements.txt
 pkg install mpv -y
 cp .env.example .env
