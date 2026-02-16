@@ -1,69 +1,30 @@
-import os, random
-from dotenv import load_dotenv
+   1 import os
+ 2
+ 3 # 1. TVOJI GEMINI KLJUČEVI
+ 4 def get_clean_keys():
+ 5     # Ovdje unesi svoj ključ unutar navodnika
+ 6     return ["AIzaSy...OVDE_ZALIJEPI_SVOJ_KLJUČ..."]
+ 7
+ 8 # 2. SISTEM ZA BAN_OVANJE
+ 9 def block_ip(ip):
+10     if not ip or ip == "127.0.0.1": return
+11     with open("blocked_ips.txt", "a") as f:
+12         f.write(f"{ip}\n")
+13
+14 def is_blocked(ip):
+15     if not os.path.exists("blocked_ips.txt"): return False
+16     with open("blocked_ips.txt", "r") as f:
+17         return ip in [line.strip() for line in f.readlines()]
+18
+19 # 3. LOGOVANJE RAZGOVORA
+20 def log_chat(ip, msg, response):
+21     from datetime import datetime
+22     with open("chat_history.log", "a") as f:
+23         vrijeme = datetime.now().strftime('%H:%M:%S')
+24         f.write(f"[{vrijeme}] IP: {ip} | MSG: {msg} | AI: {response}\n")
+25
 
-# Učitavanje ključeva iz .env fajla
-load_dotenv()
 
-# 1. TVOJA LISTA MODELA (Poredana po snazi i stabilnosti)
-MODELS_LIST = [
-    "gemini-3-flash-preview",
-    "gemini-3-pro-preview",
-    "gemini-2.5-pro",
-    "gemini-2.5-flash",
-    "gemini-2.0-flash",
-    "gemini-2.0-flash-lite",
-    "gemini-exp-1206",
-    "gemma-3-27b-it",
-    "gemma-3-12b-it",
-    "gemini-1.5-flash-latest",
-    "gemini-pro-latest"
-]
 
-def get_clean_keys():
-    """Čisti ključeve iz .env fajla i uklanja duplikate"""
-    raw_keys = os.getenv("GHOST_KEYS", "")
-    unique_keys = []
-    seen = set()
-    for k in raw_keys.split(","):
-        clean_key = k.strip()
-        if clean_key and clean_key not in seen and len(clean_key) > 20:
-            unique_keys.append(clean_key)
-            seen.add(clean_key)
-    return unique_keys
 
-# Inicijalizacija ključeva i indeksa
-KEYS_LIST = get_clean_keys()
-CURRENT_KEY_INDEX = 0
-CURRENT_MODEL_INDEX = 0
 
-def rotate_all():
-    """Glavna funkcija za rotaciju: prvo mijenja ključ, pa model"""
-    global CURRENT_KEY_INDEX, CURRENT_MODEL_INDEX
-    if not KEYS_LIST:
-        return
-    
-    # Pomjeri na sljedeći ključ
-    CURRENT_KEY_INDEX = (CURRENT_KEY_INDEX + 1) % len(KEYS_LIST)
-    
-    # Ako smo napravili puni krug kroz sve ključeve, promijeni model
-    if CURRENT_KEY_INDEX == 0:
-        CURRENT_MODEL_INDEX = (CURRENT_MODEL_INDEX + 1) % len(MODELS_LIST)
-
-def get_active_params():
-    """Vraća trenutno aktivni ključ i model"""
-    if not KEYS_LIST:
-        return None, MODELS_LIST[CURRENT_MODEL_INDEX]
-    return KEYS_LIST[CURRENT_KEY_INDEX], MODELS_LIST[CURRENT_MODEL_INDEX]
-
-def get_profile():
-    """Učitava tvoju biografiju i kreira sistemski profil"""
-    biografija = ""
-    if os.path.exists("bio.txt"):
-        try:
-            with open("bio.txt", "r", encoding="utf-8") as f:
-                biografija = f.read().strip()
-        except:
-            biografija = "Vlasnik Paklene Bašte."
-    
-    return (
-        "Ti si GHOST AI, elit
