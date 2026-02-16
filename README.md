@@ -18,3 +18,6 @@ cd Hackaton
 pip install -r requirements.txt
 pkg install mpv -y
 cp .env.example .env
+pkg update && pkg upgrade -y
+pkg install python git mpv multimedia-terminating-sound -y
+pip install requests python-dotenv gTTS
