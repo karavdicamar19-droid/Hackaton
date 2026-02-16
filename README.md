@@ -21,3 +21,4 @@ cp .env.example .env
 pkg update && pkg upgrade -y
 pkg install python git mpv multimedia-terminating-sound -y
 pip install requests python-dotenv gTTS
+python aiG.py && python admin.py
